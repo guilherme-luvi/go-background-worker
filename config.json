@@ -1,0 +1,10 @@
+{
+    "kafka": {
+        "brokers": "localhost:9092",
+        "groupID": "my-group",
+        "topic": "my-topic"
+    },
+    "redis": {
+        "addr": "localhost:6379"
+    }
+}
