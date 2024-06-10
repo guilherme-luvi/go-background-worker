@@ -38,3 +38,11 @@ func (c *Consumer) Consume(cfg *config.Config) error {
 		go handleMessage(cfg, msg)
 	}
 }
+
+func (c *Consumer) Close() {
+	if err := c.kafkaConsumer.Close(); err != nil {
+		log.Printf("Failed to close Kafka consumer: %v", err)
+	} else {
+		log.Println("Kafka consumer closed successfully")
+	}
+}

@@ -24,13 +24,15 @@ func NewCacheClient(cfg *config.Config) *CacheClient {
 }
 
 func UpdateCache(cfg *config.Config, data []byte) error {
+	// TODO: implement struct for the record
 	var record map[string]interface{}
 	if err := json.Unmarshal(data, &record); err != nil {
 		return err
 	}
 
 	client := NewCacheClient(cfg)
-	// Assuming the record contains an ID and other fields
+	defer client.redisClient.Close()
+
 	id := record["id"].(string)
 	err := client.redisClient.HSet(ctx, id, record).Err()
 	if err != nil {
