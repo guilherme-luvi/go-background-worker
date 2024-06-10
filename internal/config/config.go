@@ -16,8 +16,9 @@ type RedisConfig struct {
 }
 
 type Config struct {
-	Kafka KafkaConfig `json:"kafka"`
-	Redis RedisConfig `json:"redis"`
+	Kafka      KafkaConfig `json:"kafka"`
+	Redis      RedisConfig `json:"redis"`
+	NumWorkers int         `json:"numWorkers"`
 }
 
 func LoadConfig() (*Config, error) {

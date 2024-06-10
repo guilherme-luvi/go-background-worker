@@ -30,7 +30,7 @@ func main() {
 
 	// Start consuming messages in a separate goroutine
 	go func() {
-		if err := consumer.Consume(cfg); err != nil {
+		if err := consumer.Consume(ctx, cfg); err != nil {
 			log.Fatalf("Error while consuming messages: %v", err)
 		}
 	}()

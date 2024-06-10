@@ -1,7 +1,9 @@
 package queue
 
 import (
+	"context"
 	"log"
+	"sync"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/guilherme-luvi/go-queue-worker/internal/config"
@@ -9,6 +11,7 @@ import (
 
 type Consumer struct {
 	kafkaConsumer *kafka.Consumer
+	waitGroup     sync.WaitGroup
 }
 
 func NewConsumer(cfg *config.Config) (*Consumer, error) {
@@ -26,16 +29,47 @@ func NewConsumer(cfg *config.Config) (*Consumer, error) {
 	return &Consumer{kafkaConsumer: c}, nil
 }
 
-func (c *Consumer) Consume(cfg *config.Config) error {
-	for {
-		msg, err := c.kafkaConsumer.ReadMessage(-1)
-		if err != nil {
-			return err
-		}
+func (c *Consumer) Consume(ctx context.Context, cfg *config.Config) error {
+	messageChannel := make(chan *kafka.Message, cfg.NumWorkers)
 
-		// Handle the message
-		log.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
-		go handleMessage(cfg, msg)
+	// Start worker pool
+	for i := 0; i < cfg.NumWorkers; i++ {
+		c.waitGroup.Add(1)
+		go c.worker(ctx, cfg, messageChannel)
+	}
+
+	for {
+		select {
+		case <-ctx.Done():
+			close(messageChannel)
+			c.waitGroup.Wait()
+			return nil
+		default:
+			msg, err := c.kafkaConsumer.ReadMessage(-1)
+			if err != nil {
+				return err
+			}
+			messageChannel <- msg
+		}
+	}
+}
+
+func (c *Consumer) worker(ctx context.Context, cfg *config.Config, messages <-chan *kafka.Message) {
+	defer c.waitGroup.Done()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case msg, ok := <-messages:
+			if !ok {
+				return
+			}
+			// Handle the message
+			log.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+			if err := handleMessage(cfg, msg); err != nil {
+				log.Printf("Error handling message: %v", err)
+			}
+		}
 	}
 }
 
