@@ -12,7 +12,7 @@ Este projeto implementa um worker em Go que consome mensagens de um tópico Kafk
 - **internal/kafka/consumer.go**: Implementa o consumidor Kafka.
 - **internal/database/cache.go**: Atualiza o cache Redis com os dados processados.
 
-## Explicando execução principal:
+## Lógica principal:
 
 ### Arquivo Consumer.go
 
