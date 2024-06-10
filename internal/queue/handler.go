@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/guilherme-luvi/go-queue-worker/internal/config"
 	"github.com/guilherme-luvi/go-queue-worker/internal/database"
+	"github.com/guilherme-luvi/go-queue-worker/pkg/config"
 )
 
 func handleMessage(cfg *config.Config, msg *kafka.Message) error {

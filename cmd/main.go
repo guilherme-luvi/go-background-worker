@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/guilherme-luvi/go-queue-worker/internal/config"
 	"github.com/guilherme-luvi/go-queue-worker/internal/queue"
+	"github.com/guilherme-luvi/go-queue-worker/pkg/config"
 )
 
 func main() {

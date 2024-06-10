@@ -8,7 +8,7 @@ Este projeto implementa um worker em Go que consome mensagens de um tópico Kafk
 
 - **main.go**: Ponto de entrada da aplicação.
 - **config.json**: Arquivo de configuração contendo detalhes do Kafka e Redis.
-- **internal/config/config.go**: Carrega a configuração do arquivo config.json.
+- **pkg/config/config.go**: Carrega a configuração do arquivo config.json.
 - **internal/kafka/consumer.go**: Implementa o consumidor Kafka.
 - **internal/database/cache.go**: Atualiza o cache Redis com os dados processados.
 
@@ -20,7 +20,8 @@ A função Consume é responsável por consumir mensagens de um tópico Kafka:
 
 - A função Consume recebe um contexto ctx e as configurações da aplicação como parâmetros.
 - Ela cria um canal chamado messageChannel que é usado para passar mensagens do consumidor Kafka para os workers.
-- Em seguida, inicia um pool de workers. O número de workers é determinado pelo valor NumWorkers na configuração. Cada worker é uma goroutine que executa a função worker.
+- Inicia um pool de workers. O número de workers é determinado pelo valor NumWorkers na configuração. 
+- Cada worker é uma goroutine que executa a função worker.
 - A função entra em um loop infinito onde ela lê continuamente mensagens do consumidor Kafka. Se o contexto for cancelado, ela fecha o canal de mensagens e espera que todos os workers terminem antes de retornar.
 - Se uma mensagem é lida com sucesso do consumidor Kafka, ela é enviada para o canal de mensagens. 
 - Os workers estão lendo continuamente deste canal e processam qualquer mensagem que recebem.

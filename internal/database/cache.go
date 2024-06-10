@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/guilherme-luvi/go-queue-worker/internal/config"
+	"github.com/guilherme-luvi/go-queue-worker/pkg/config"
 )
 
 var ctx = context.Background()

@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/guilherme-luvi/go-queue-worker/internal/config"
+	"github.com/guilherme-luvi/go-queue-worker/pkg/config"
 )
 
 type Consumer struct {
